@@ -1,0 +1,831 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+
+public class RCBvsCSK_RCB_Batting_First : MonoBehaviour
+{
+    //RCB batting first. CSK batting (chasing) in a separate script
+
+    //names boxes
+    public GameObject RCB;
+    public GameObject CSK;
+    public GameObject RCB_Total;
+    public GameObject total_Overs_Box;
+    public GameObject run_Rate_Box;
+
+
+    bool current_Batsman_1_out;
+    bool current_Batsman_2_out;
+
+    //player name boxes
+    public GameObject RCB_player_1_name;
+    public GameObject RCB_player_2_name;
+    public GameObject RCB_player_3_name;
+    public GameObject RCB_player_4_name;
+    public GameObject RCB_player_5_name;
+
+    public GameObject CSK_player_1_name;
+    public GameObject CSK_player_2_name;
+    public GameObject CSK_player_3_name;
+    public GameObject CSK_player_4_name;
+    public GameObject CSK_player_5_name;
+
+    public GameObject RCB_player_1_runs;
+    public GameObject RCB_player_2_runs;
+    public GameObject RCB_player_3_runs;
+    public GameObject RCB_player_4_runs;
+    public GameObject RCB_player_5_runs;
+
+    public GameObject RCB_player_1_deliveries;
+    public GameObject RCB_player_2_deliveries;
+    public GameObject RCB_player_3_deliveries;
+    public GameObject RCB_player_4_deliveries;
+    public GameObject RCB_player_5_deliveries;
+
+    public GameObject CSK_player_1_overs;
+    public GameObject CSK_player_2_overs;
+    public GameObject CSK_player_3_overs;
+    public GameObject CSK_player_4_overs;
+    public GameObject CSK_player_5_overs;
+
+    public GameObject CSK_player_1_runs;
+    public GameObject CSK_player_2_runs;
+    public GameObject CSK_player_3_runs;
+    public GameObject CSK_player_4_runs;
+    public GameObject CSK_player_5_runs;
+
+    public GameObject CSK_player_1_wickets;
+    public GameObject CSK_player_2_wickets;
+    public GameObject CSK_player_3_wickets;
+    public GameObject CSK_player_4_wickets;
+    public GameObject CSK_player_5_wickets;
+
+    //players names
+    public static string RCB_player_1 = "Virat Kohli";
+    public static string RCB_player_2 = "AB de Villiers";
+    public static string RCB_player_3 = "Chris Morris";
+    public static string RCB_player_4 = "Yuzvendra Chahal";
+    public static string RCB_player_5 = "Adam Zampa";
+
+    public static string CSK_player_1 = "Ruturaj Gaikwad";
+    public static string CSK_player_2 = "MS Dhoni";
+    public static string CSK_player_3 = "Ravindra Jadeja";
+    public static string CSK_player_4 = "Deepak Chahar";
+    public static string CSK_player_5 = "Josh Hazelwood";
+
+    //RCB player runs, balls, batting total, overs, tiers
+    public static int RCB_player_1_Runs;
+    public static int RCB_player_2_Runs;
+    public static int RCB_player_3_Runs;
+    public static int RCB_player_4_Runs;
+    public static int RCB_player_5_Runs;
+
+    public static int RCB_player_1_balls_played;
+    public static int RCB_player_2_balls_played;
+    public static int RCB_player_3_balls_played;
+    public static int RCB_player_4_balls_played;
+    public static int RCB_player_5_balls_played;
+
+    public static int RCB_player_1_Tier;
+    public static int RCB_player_2_Tier;
+    public static int RCB_player_3_Tier;
+    public static int RCB_player_4_Tier;
+    public static int RCB_player_5_Tier;
+
+    public static List<int> RCB_Tiers = new List<int>();
+    public static List<string> RCB_Batsman_Out_Or_Currently_Batting = new List<string>();
+    public static List<string> RCB_Playing_Team = new List<string>();
+    public static List<string> RCB_Playing_Team_2 = new List<string>();
+
+    public static int RCB_1st_Innings_Total;
+
+    //CSK player overs, wickets, runs, tiers
+    public static int CSK_player_1_Runs;
+    public static int CSK_player_2_Runs;
+    public static int CSK_player_3_Runs;
+    public static int CSK_player_4_Runs;
+    public static int CSK_player_5_Runs;
+
+    public static int CSK_player_1_Wickets;
+    public static int CSK_player_2_Wickets;
+    public static int CSK_player_3_Wickets;
+    public static int CSK_player_4_Wickets;
+    public static int CSK_player_5_Wickets;
+
+    public static int CSK_player_1_Overs;
+    public static int CSK_player_2_Overs;
+    public static int CSK_player_3_Overs;
+    public static int CSK_player_4_Overs;
+    public static int CSK_player_5_Overs;
+
+    public static int CSK_player_1_Tier;
+    public static int CSK_player_2_Tier;
+    public static int CSK_player_3_Tier;
+    public static int CSK_player_4_Tier;
+    public static int CSK_player_5_Tier;
+
+    public static List<string> CSK_Playing_Team = new List<string>();
+    public static List<string> CSK_Playing_Team_2 = new List<string>();
+    public static List<int> CSK_Tiers = new List<int>();
+    public static List<int> CSK_Bowlers_Individual_Strengths = new List<int>();
+    public static List<bool> CSK_Just_Bowled = new List<bool> { false, false, false, false, false};
+    public static List<int> CSK_Overs_Per_Bowler = new List<int> { 0, 0, 0, 0, 0 };
+    public static List<int> CSK_Wickets_Per_Bowler = new List<int> { 0, 0, 0, 0, 0 };
+    public static List<int> CSK_Runs_Per_Bowler = new List<int> { 0, 0, 0, 0, 0 };
+    public static List<int> CSK_DeliveriesUpTo6_Per_Bowler = new List<int> { 0, 0, 0, 0, 0 };
+
+    //batting levels
+    public static List<int> Tier_1_Batting = new List<int> { 0, 1, 2, 3, 4, 4, 4, 4, 6, 6, 6, 6, 6, 6, };
+    public static List<int> Tier_2_Batting = new List<int> { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 6, 6, };
+    public static List<int> Tier_3_Batting = new List<int> { 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4, 6, 6, 6, };
+
+    //Bools
+    public static bool RCB_bowled_out = false;
+
+    public static bool CSK_player_1_just_bowled;
+    public static bool CSK_player_2_just_bowled;
+    public static bool CSK_player_3_just_bowled;
+    public static bool CSK_player_4_just_bowled;
+    public static bool CSK_player_5_just_bowled;
+
+    //misc
+    public static int current_Batsman_1_Tier;
+    public static int current_Batsman_2_Tier;
+    public static int bowler_Position_Previous_Over;
+    public static int bowler_Position_Next_Over;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        RCB.GetComponent<Text>().text = "Royal Challengers Bangalore";
+        CSK.GetComponent<Text>().text = "Chennai Super Kings";
+
+        RCB_player_1_name.GetComponent<Text>().text = RCB_player_1;
+        RCB_player_2_name.GetComponent<Text>().text = RCB_player_2;
+        RCB_player_3_name.GetComponent<Text>().text = RCB_player_3;
+        RCB_player_4_name.GetComponent<Text>().text = RCB_player_4;
+        RCB_player_5_name.GetComponent<Text>().text = RCB_player_5;
+
+        CSK_player_1_name.GetComponent<Text>().text = CSK_player_1;
+        CSK_player_2_name.GetComponent<Text>().text = CSK_player_2;
+        CSK_player_3_name.GetComponent<Text>().text = CSK_player_3;
+        CSK_player_4_name.GetComponent<Text>().text = CSK_player_4;
+        CSK_player_5_name.GetComponent<Text>().text = CSK_player_5;
+
+        RCB_Batting_CSK_Bowling();
+    }
+
+    public void RCB_Batting_CSK_Bowling()
+    {
+        string currentBowler = "";
+        int current_Bowler_Delivery = 0;
+        bool current_Bowler_Chosen = false;
+        int current_Bowler_Tier = 0;
+        int current_Bowler_Runs = 0;
+        int current_Bowler_Wickets = 0;
+        int total_Overs = 0;
+        int deliveries_Bowled = 0;
+        int RCB_Wickets_Lost = 0;
+
+        string current_Batsman_1 = "";
+        int current_Batsman_1_Shot = 0;
+        int current_Batsman_1_Runs = 0;
+        int current_Batsman_1_Balls = 0;
+        string current_Batsman_2 = "";
+        int current_Batsman_2_Runs = 0;
+        int current_Batsman_2_Balls = 0;
+        int current_Batsman_2_Shot = 0;
+        string on_Strike_Batsman = "";
+
+        RCB_Playing_Team.Add(RCB_player_1);
+        RCB_Playing_Team.Add(RCB_player_2);
+        RCB_Playing_Team.Add(RCB_player_3);
+        RCB_Playing_Team.Add(RCB_player_4);
+        RCB_Playing_Team.Add(RCB_player_5);
+
+        RCB_Playing_Team_2.Add(RCB_player_3);
+        RCB_Playing_Team_2.Add(RCB_player_4);
+        RCB_Playing_Team_2.Add(RCB_player_5);
+
+        current_Batsman_1 = RCB_Playing_Team[0];
+        current_Batsman_2 = RCB_Playing_Team[1];
+
+        RCB_Batsman_Out_Or_Currently_Batting.Add(RCB_Playing_Team[0]);
+        RCB_Batsman_Out_Or_Currently_Batting.Add(RCB_Playing_Team[1]);
+
+        //set bowler's bowling 'strength'
+
+        CSK_Playing_Team.Add(CSK_player_1);
+        CSK_Playing_Team.Add(CSK_player_2);
+        CSK_Playing_Team.Add(CSK_player_3);
+        CSK_Playing_Team.Add(CSK_player_4);
+        CSK_Playing_Team.Add(CSK_player_5);
+
+        if (RCB_player_1_Tier == 0 && RCB_player_2_Tier == 0 && RCB_player_3_Tier == 0
+            && RCB_player_4_Tier == 0 && RCB_player_5_Tier == 0)
+        {
+            RCB_player_1_Tier = 1;
+            RCB_player_2_Tier = 1;
+            RCB_player_3_Tier = 2;
+            RCB_player_4_Tier = 3;
+            RCB_player_5_Tier = 3;
+        }
+
+        RCB_Tiers.Add(RCB_player_1_Tier);
+        RCB_Tiers.Add(RCB_player_2_Tier);
+        RCB_Tiers.Add(RCB_player_3_Tier);
+        RCB_Tiers.Add(RCB_player_4_Tier);
+        RCB_Tiers.Add(RCB_player_5_Tier);
+
+        if (CSK_player_1_Tier == 0 && CSK_player_2_Tier == 0 && CSK_player_3_Tier == 0
+            && CSK_player_4_Tier == 0 && CSK_player_5_Tier == 0)
+        {
+            CSK_player_1_Tier = 1;
+            CSK_player_2_Tier = 1;
+            CSK_player_3_Tier = 2;
+            CSK_player_4_Tier = 3;
+            CSK_player_5_Tier = 3;
+        }
+
+        CSK_Tiers.Add(CSK_player_1_Tier);
+        CSK_Tiers.Add(CSK_player_2_Tier);
+        CSK_Tiers.Add(CSK_player_3_Tier);
+        CSK_Tiers.Add(CSK_player_4_Tier);
+        CSK_Tiers.Add(CSK_player_5_Tier);
+
+        int CSK_Bowler_1_Strength = 0;
+        int CSK_Bowler_2_Strength = 0;
+        int CSK_Bowler_3_Strength = 0;
+        int CSK_Bowler_4_Strength = 0;
+        int CSK_Bowler_5_Strength = 0;
+
+        CSK_Bowlers_Individual_Strengths.Add(CSK_Bowler_1_Strength);
+        CSK_Bowlers_Individual_Strengths.Add(CSK_Bowler_2_Strength);
+        CSK_Bowlers_Individual_Strengths.Add(CSK_Bowler_3_Strength);
+        CSK_Bowlers_Individual_Strengths.Add(CSK_Bowler_4_Strength);
+        CSK_Bowlers_Individual_Strengths.Add(CSK_Bowler_5_Strength);
+
+        for (int i = 0; i < CSK_Tiers.Count; i++)
+        {
+            if (CSK_Tiers[i] == 1)
+            {
+                CSK_Bowlers_Individual_Strengths[i] = Random.Range(7, 20);
+            }
+
+            else if (CSK_Tiers[i] == 2)
+            {
+                CSK_Bowlers_Individual_Strengths[i] = Random.Range(7, 16);
+            }
+
+            else if (CSK_Tiers[i] == 3)
+            {
+                CSK_Bowlers_Individual_Strengths[i] = Random.Range(7, 11);
+            }
+        }
+
+        bool match_Batting_1 = false;
+        int k = 0;
+        while(match_Batting_1 == false)
+        {
+            if(current_Batsman_1 == RCB_Playing_Team[k])
+            {
+                current_Batsman_1_Tier = RCB_Tiers[k];
+                match_Batting_1 = true;
+            }
+            k++;
+        }
+
+        bool match_Batting_2 = false;
+        int m = 0;
+        while (match_Batting_2 == false)
+        {
+            if (current_Batsman_2 == RCB_Playing_Team[m])
+            {
+                current_Batsman_2_Tier = RCB_Tiers[m];
+                match_Batting_2 = true;
+            }
+            m++;
+        }
+
+        while (RCB_bowled_out == false && total_Overs < 5)
+        {
+            
+            current_Bowler_Chosen = false;
+            deliveries_Bowled = 0;
+
+            bool tier_2_Unavailable = false;
+            bool tier_3_Unavailable = false;
+
+            //pick bowler
+            while (current_Bowler_Chosen == false)
+            {
+                for(int i = 0; i < CSK_Tiers.Count; i++)
+                {
+                    if (CSK_Tiers[i] == 3 && (CSK_Just_Bowled[i] == false) && CSK_Overs_Per_Bowler[i] < 2)
+                    {
+                        currentBowler = CSK_Playing_Team[i];
+                        current_Bowler_Tier = 3;
+                        bowler_Position_Next_Over = i;
+                        current_Bowler_Chosen = true;
+                    }
+
+                    if(i == 4 && current_Bowler_Chosen == false)
+                    {
+                        tier_3_Unavailable = true;
+                    }
+                }
+
+                if(tier_3_Unavailable == true)
+                {
+                    for (int i = 0; i < CSK_Tiers.Count; i++)
+                    {
+                        if (CSK_Tiers[i] == 2 && (CSK_Just_Bowled[i] == false) && CSK_Overs_Per_Bowler[i] < 2)
+                        {
+                            currentBowler = CSK_Playing_Team[i];
+                            current_Bowler_Tier = 2;
+                            bowler_Position_Next_Over = i;
+                            current_Bowler_Chosen = true;
+                        }
+
+                        if (i == 4 && current_Bowler_Chosen == false)
+                        {
+                            tier_2_Unavailable = true;
+                        }
+                    }
+                }
+
+                if(tier_2_Unavailable == true)
+                {
+                    for (int i = 0; i < CSK_Tiers.Count; i++)
+                    {
+                        if (CSK_Tiers[i] == 1 && (CSK_Just_Bowled[i] == false) && CSK_Overs_Per_Bowler[i] < 2)
+                        {
+                            currentBowler = CSK_Playing_Team[i];
+                            current_Bowler_Tier = 1;
+                            bowler_Position_Next_Over = i;
+                            current_Bowler_Chosen = true;
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < CSK_Tiers.Count; i++)
+            {
+                if (current_Bowler_Chosen == false)
+                {
+                    if (CSK_Tiers[i] == 3 && (CSK_Just_Bowled[i] == false) && CSK_Overs_Per_Bowler[i] < 2)
+                    {
+                        currentBowler = CSK_Playing_Team[i];
+                        current_Bowler_Tier = 3;
+                        bowler_Position_Next_Over = i;
+                        current_Bowler_Chosen = true;
+                    }
+
+                    else if (CSK_Tiers[i] == 2 && (CSK_Just_Bowled[i] == false) && CSK_Overs_Per_Bowler[i] < 2)
+                    {
+                        currentBowler = CSK_Playing_Team[i];
+                        current_Bowler_Tier = 2;
+                        bowler_Position_Next_Over = i;
+                        current_Bowler_Chosen = true;
+                    }
+
+                    else if (CSK_Tiers[i] == 1 && (CSK_Just_Bowled[i] == false) && CSK_Overs_Per_Bowler[i] < 2)
+                    {
+                        currentBowler = CSK_Playing_Team[i];
+                        current_Bowler_Tier = 1;
+                        bowler_Position_Next_Over = i;
+                        current_Bowler_Chosen = true;
+                    }
+                }
+            }
+
+            if(CSK_Overs_Per_Bowler[bowler_Position_Previous_Over] < 2)
+            {
+                CSK_Just_Bowled[bowler_Position_Previous_Over] = false;
+            }
+
+            //bowl over
+            for (int i = 0; i < 6; i++)
+            {
+                if (RCB_bowled_out == false && total_Overs < 5)
+                {
+                    //determine batting strength based on batsman tier
+                    int select_1_B = Random.Range(0, Tier_1_Batting.Count);
+                    int select_2_B = Random.Range(0, Tier_2_Batting.Count);
+                    int select_3_B = Random.Range(0, Tier_3_Batting.Count);
+
+                    if(current_Batsman_1_Tier == 1)
+                    {
+                        current_Batsman_1_Shot = Tier_1_Batting[select_1_B];
+                    }
+                    else if (current_Batsman_1_Tier == 2)
+                    {
+                        current_Batsman_1_Shot = Tier_2_Batting[select_2_B];
+                    }
+                    else if (current_Batsman_1_Tier == 3)
+                    {
+                        current_Batsman_1_Shot = Tier_3_Batting[select_3_B];
+                    }
+
+                    if (current_Batsman_2_Tier == 1)
+                    {
+                        current_Batsman_2_Shot = Tier_1_Batting[select_1_B];
+                    }
+                    else if (current_Batsman_2_Tier == 2)
+                    {
+                        current_Batsman_2_Shot = Tier_2_Batting[select_2_B];
+                    }
+                    else if (current_Batsman_2_Tier == 3)
+                    {
+                        current_Batsman_2_Shot = Tier_3_Batting[select_3_B];
+                    }
+
+                    bool match_Made = false;
+                    int j = 0;
+                    while (match_Made == false)
+                    {
+                        if (CSK_Playing_Team[j] == currentBowler)
+                        {
+                            current_Bowler_Delivery = Random.Range(0, CSK_Bowlers_Individual_Strengths[j]);
+                            match_Made = true;
+                            Debug.Log("Current bowler delivery is " + current_Bowler_Delivery + " individual strength is " + CSK_Bowlers_Individual_Strengths[j]);
+                        }
+                        j++;
+                        
+                    }
+
+                    if (deliveries_Bowled == 0 && total_Overs == 0)
+                    {
+                        on_Strike_Batsman = current_Batsman_1;
+                    }
+
+                    if (on_Strike_Batsman == current_Batsman_1)
+                    {
+                        if (current_Batsman_1_Shot != current_Bowler_Delivery)
+                        {
+                            current_Batsman_1_Balls++;
+                            current_Batsman_1_Runs += current_Batsman_1_Shot;
+                            RCB_1st_Innings_Total += current_Batsman_1_Shot;
+                            current_Bowler_Runs += current_Batsman_1_Shot;
+                            if (current_Batsman_1_Shot == 1 || current_Batsman_1_Shot == 3)
+                            {
+                                on_Strike_Batsman = current_Batsman_2;
+                            }
+                        }
+                        else if (current_Batsman_1_Shot == current_Bowler_Delivery)
+                        {
+                            current_Batsman_1_Balls++;
+                            RCB_Wickets_Lost++;
+                            Debug.Log(current_Batsman_1 + " out to " + currentBowler);
+                            if (current_Batsman_1 == RCB_player_1)
+                            {
+                                RCB_player_1_balls_played = current_Batsman_1_Balls;
+                                RCB_player_1_Runs = current_Batsman_1_Runs;
+                            }
+                            else if (current_Batsman_1 == RCB_player_2)
+                            {
+                                RCB_player_2_balls_played = current_Batsman_1_Balls;
+                                RCB_player_2_Runs = current_Batsman_1_Runs;
+                            }
+                            else if (current_Batsman_1 == RCB_player_3)
+                            {
+                                RCB_player_3_balls_played = current_Batsman_1_Balls;
+                                RCB_player_3_Runs = current_Batsman_1_Runs;
+                            }
+                            else if (current_Batsman_1 == RCB_player_4)
+                            {
+                                RCB_player_4_balls_played = current_Batsman_1_Balls;
+                                RCB_player_4_Runs = current_Batsman_1_Runs;
+                            }
+                            else if (current_Batsman_1 == RCB_player_5)
+                            {
+                                RCB_player_5_balls_played = current_Batsman_1_Balls;
+                                RCB_player_5_Runs = current_Batsman_1_Runs;
+                            }
+                            if(RCB_Wickets_Lost != 4)
+                            {
+                                current_Batsman_1_Balls = 0;
+                                current_Batsman_1_Runs = 0;
+                            }
+                            if (RCB_Wickets_Lost == 4)
+                            {
+                                RCB_bowled_out = true;
+                                current_Batsman_1_out = true;
+                                if(deliveries_Bowled + 1 < 6)
+                                {
+                                    CSK_DeliveriesUpTo6_Per_Bowler[bowler_Position_Next_Over] = deliveries_Bowled + 1;
+                                }
+                            }
+                            current_Bowler_Wickets++;
+                            //choose next batsman
+                            if (RCB_Wickets_Lost < 4)
+                            {
+                                current_Batsman_1 = RCB_Playing_Team_2[0];
+                                RCB_Playing_Team_2.RemoveAt(0);
+                                on_Strike_Batsman = current_Batsman_1;
+                                current_Batsman_1_out = false;
+                                //reassign batsman tier
+                                bool match_Batting_3 = false;
+                                int n = 0;
+                                while (match_Batting_3 == false)
+                                {
+                                    if (current_Batsman_1 == RCB_Playing_Team[n])
+                                    {
+                                        current_Batsman_1_Tier = RCB_Tiers[n];
+                                        match_Batting_3 = true;
+                                    }
+                                    n++;
+                                }
+                            }
+                            
+                        }
+                    }
+                    else if (on_Strike_Batsman == current_Batsman_2)
+                    {
+                        if (current_Batsman_2_Shot != current_Bowler_Delivery)
+                        {
+                            current_Batsman_2_Balls++;
+                            current_Batsman_2_Runs += current_Batsman_2_Shot;
+                            RCB_1st_Innings_Total += current_Batsman_2_Shot;
+                            current_Bowler_Runs += current_Batsman_2_Shot;
+                            if (current_Batsman_2_Shot == 1 || current_Batsman_2_Shot == 3)
+                            {
+                                on_Strike_Batsman = current_Batsman_1;
+                            }
+                        }
+                        else if (current_Batsman_2_Shot == current_Bowler_Delivery)
+                        {
+                            current_Batsman_2_Balls++;
+                            RCB_Wickets_Lost++;
+                            Debug.Log(current_Batsman_2 + " out to " + currentBowler);
+                            if (current_Batsman_2 == RCB_player_1)
+                            {
+                                RCB_player_1_balls_played = current_Batsman_2_Balls;
+                                RCB_player_1_Runs = current_Batsman_2_Runs;
+                            }
+                            else if (current_Batsman_2 == RCB_player_2)
+                            {
+                                RCB_player_2_balls_played = current_Batsman_2_Balls;
+                                RCB_player_2_Runs = current_Batsman_2_Runs;
+                            }
+                            else if (current_Batsman_2 == RCB_player_3)
+                            {
+                                RCB_player_3_balls_played = current_Batsman_2_Balls;
+                                RCB_player_3_Runs = current_Batsman_2_Runs;
+                            }
+                            else if (current_Batsman_2 == RCB_player_4)
+                            {
+                                RCB_player_4_balls_played = current_Batsman_2_Balls;
+                                RCB_player_4_Runs = current_Batsman_2_Runs;
+                            }
+                            else if (current_Batsman_2 == RCB_player_5)
+                            {
+                                RCB_player_5_balls_played = current_Batsman_2_Balls;
+                                RCB_player_5_Runs = current_Batsman_2_Runs;
+                            }
+                            if(RCB_Wickets_Lost != 4)
+                            {
+                                current_Batsman_2_Balls = 0;
+                                current_Batsman_2_Runs = 0;
+                            }
+                            if (RCB_Wickets_Lost == 4)
+                            {
+                                RCB_bowled_out = true;
+                                current_Batsman_2_out = true;
+                                if (deliveries_Bowled + 1 < 6)
+                                {
+                                    CSK_DeliveriesUpTo6_Per_Bowler[bowler_Position_Next_Over] = deliveries_Bowled + 1;
+                                }
+                            }
+                            current_Bowler_Wickets++;
+                            //choose next batsman
+                            if (RCB_Wickets_Lost < 4)
+                            {
+                                current_Batsman_2 = RCB_Playing_Team_2[0];
+                                RCB_Playing_Team_2.RemoveAt(0);
+                                on_Strike_Batsman = current_Batsman_2;
+                                current_Batsman_2_out = false;
+                                bool match_Batting_4 = false;
+                                int p = 0;
+                                while (match_Batting_4 == false) { 
+                                    if (current_Batsman_2 == RCB_Playing_Team[p])
+                                    {
+                                        current_Batsman_2_Tier = RCB_Tiers[p];
+                                        match_Batting_4 = true;
+                                    }
+                                    p++;
+                                }
+                            }
+                            
+                        }
+                    }
+                    deliveries_Bowled++;
+                }
+
+                if (deliveries_Bowled == 6)
+                {
+                    total_Overs++;
+                    //rotate strike at the end of the over
+                    if(total_Overs < 5)
+                    {
+                        if (on_Strike_Batsman == current_Batsman_1)
+                        {
+                            on_Strike_Batsman = current_Batsman_2;
+                        }
+                        else if (on_Strike_Batsman == current_Batsman_2)
+                        {
+                            on_Strike_Batsman = current_Batsman_1;
+                        }
+                    }
+                    bowler_Position_Previous_Over = bowler_Position_Next_Over;
+                    CSK_Just_Bowled[bowler_Position_Previous_Over] = true;
+                    CSK_Overs_Per_Bowler[bowler_Position_Previous_Over] += 1;
+                    CSK_Wickets_Per_Bowler[bowler_Position_Previous_Over] += current_Bowler_Wickets;
+                    CSK_Runs_Per_Bowler[bowler_Position_Previous_Over] += current_Bowler_Runs;
+                    current_Bowler_Runs = 0;
+                    current_Bowler_Wickets = 0;
+                }
+            }
+
+            if(RCB_bowled_out == true || total_Overs == 5)
+            {
+                //indicate if any batsmen not out
+                if (current_Batsman_1_out == false)
+                {
+                    if (current_Batsman_1 == RCB_player_1)
+                    {
+                        string player_Not_Out = RCB_player_1 + " *";
+                        RCB_player_1_name.GetComponent<Text>().text = player_Not_Out;
+                    }
+                    if (current_Batsman_1 == RCB_player_2)
+                    {
+                        string player_Not_Out = RCB_player_2 + " *";
+                        RCB_player_2_name.GetComponent<Text>().text = player_Not_Out;
+                    }
+                    if (current_Batsman_1 == RCB_player_3)
+                    {
+                        string player_Not_Out = RCB_player_3 + " *";
+                        RCB_player_3_name.GetComponent<Text>().text = player_Not_Out;
+                    }
+                    if (current_Batsman_1 == RCB_player_4)
+                    {
+                        string player_Not_Out = RCB_player_4 + " *";
+                        RCB_player_4_name.GetComponent<Text>().text = player_Not_Out;
+                    }
+                    if (current_Batsman_1 == RCB_player_5)
+                    {
+                        string player_Not_Out = RCB_player_5 + " *";
+                        RCB_player_5_name.GetComponent<Text>().text = player_Not_Out;
+                    }
+                }
+                if (current_Batsman_2_out == false)
+                {
+                    if (current_Batsman_2 == RCB_player_1)
+                    {
+                        string player_Not_Out = RCB_player_1 + " *";
+                        RCB_player_1_name.GetComponent<Text>().text = player_Not_Out;
+                    }
+                    if (current_Batsman_2 == RCB_player_2)
+                    {
+                        string player_Not_Out = RCB_player_2 + " *";
+                        RCB_player_2_name.GetComponent<Text>().text = player_Not_Out;
+                    }
+                    if (current_Batsman_2 == RCB_player_3)
+                    {
+                        string player_Not_Out = RCB_player_3 + " *";
+                        RCB_player_3_name.GetComponent<Text>().text = player_Not_Out;
+                    }
+                    if (current_Batsman_2 == RCB_player_4)
+                    {
+                        string player_Not_Out = RCB_player_4 + " *";
+                        RCB_player_4_name.GetComponent<Text>().text = player_Not_Out;
+                    }
+                    if (current_Batsman_2 == RCB_player_5)
+                    {
+                        string player_Not_Out = RCB_player_5 + " *";
+                        RCB_player_5_name.GetComponent<Text>().text = player_Not_Out;
+                    }
+                }
+
+                //enter info for current_batsman_1
+                if (current_Batsman_1 == RCB_player_1)
+                {
+                    RCB_player_1_balls_played = current_Batsman_1_Balls;
+                    RCB_player_1_Runs = current_Batsman_1_Runs;
+                }
+                else if (current_Batsman_1 == RCB_player_2)
+                {
+                    RCB_player_2_balls_played = current_Batsman_1_Balls;
+                    RCB_player_2_Runs = current_Batsman_1_Runs;
+                }
+                else if (current_Batsman_1 == RCB_player_3)
+                {
+                    RCB_player_3_balls_played = current_Batsman_1_Balls;
+                    RCB_player_3_Runs = current_Batsman_1_Runs;
+                }
+                else if (current_Batsman_1 == RCB_player_4)
+                {
+                    RCB_player_4_balls_played = current_Batsman_1_Balls;
+                    RCB_player_4_Runs = current_Batsman_1_Runs;
+                }
+                else if (current_Batsman_1 == RCB_player_5)
+                {
+                    RCB_player_5_balls_played = current_Batsman_1_Balls;
+                    RCB_player_5_Runs = current_Batsman_1_Runs;
+                }
+
+                //enter info for current_batsman_2
+                if (current_Batsman_2 == RCB_player_1)
+                {
+                    RCB_player_1_balls_played = current_Batsman_2_Balls;
+                    RCB_player_1_Runs = current_Batsman_2_Runs;
+                }
+                else if (current_Batsman_2 == RCB_player_2)
+                {
+                    RCB_player_2_balls_played = current_Batsman_2_Balls;
+                    RCB_player_2_Runs = current_Batsman_2_Runs;
+                }
+                else if (current_Batsman_2 == RCB_player_3)
+                {
+                    RCB_player_3_balls_played = current_Batsman_2_Balls;
+                    RCB_player_3_Runs = current_Batsman_2_Runs;
+                }
+                else if (current_Batsman_2 == RCB_player_4)
+                {
+                    RCB_player_4_balls_played = current_Batsman_2_Balls;
+                    RCB_player_4_Runs = current_Batsman_2_Runs;
+                }
+                else if (current_Batsman_2 == RCB_player_5)
+                {
+                    RCB_player_5_balls_played = current_Batsman_2_Balls;
+                    RCB_player_5_Runs = current_Batsman_2_Runs;
+                }
+
+                if(deliveries_Bowled < 6)
+                {
+                    CSK_Wickets_Per_Bowler[bowler_Position_Next_Over] += current_Bowler_Wickets;
+                    CSK_Runs_Per_Bowler[bowler_Position_Next_Over] += current_Bowler_Runs;
+
+                }
+            }
+
+            //print info
+            string batting_Total = RCB_1st_Innings_Total + " / " + RCB_Wickets_Lost;
+            RCB_Total.GetComponent<Text>().text = "RCB: " + batting_Total;
+
+            if(deliveries_Bowled == 6)
+            {
+                deliveries_Bowled = 0;
+            }
+
+            total_Overs_Box.GetComponent<Text>().text = "O: " + total_Overs + "." + deliveries_Bowled;
+
+            float deliveries_Bowled_F = deliveries_Bowled;
+            float total_Overs_F = total_Overs;
+            float net_Overs_Passed = total_Overs_F;
+            float RCB_1st_Innings_Total_F = RCB_1st_Innings_Total;
+            float run_Rate = RCB_1st_Innings_Total_F / total_Overs_F;
+            string run_Rate_Converted = run_Rate.ToString();
+
+            run_Rate_Box.GetComponent<Text>().text = "RR: " + run_Rate_Converted;
+
+            RCB_player_1_runs.GetComponent<Text>().text = RCB_player_1_Runs.ToString();
+            RCB_player_2_runs.GetComponent<Text>().text = RCB_player_2_Runs.ToString();
+            RCB_player_3_runs.GetComponent<Text>().text = RCB_player_3_Runs.ToString();
+            RCB_player_4_runs.GetComponent<Text>().text = RCB_player_4_Runs.ToString();
+            RCB_player_5_runs.GetComponent<Text>().text = RCB_player_5_Runs.ToString();
+
+            RCB_player_1_deliveries.GetComponent<Text>().text = RCB_player_1_balls_played.ToString();
+            RCB_player_2_deliveries.GetComponent<Text>().text = RCB_player_2_balls_played.ToString();
+            RCB_player_3_deliveries.GetComponent<Text>().text = RCB_player_3_balls_played.ToString();
+            RCB_player_4_deliveries.GetComponent<Text>().text = RCB_player_4_balls_played.ToString();
+            RCB_player_5_deliveries.GetComponent<Text>().text = RCB_player_5_balls_played.ToString();
+
+            string CSK_player_1_total_Overs = CSK_Overs_Per_Bowler[0] + "." + CSK_DeliveriesUpTo6_Per_Bowler[0];
+            string CSK_player_2_total_Overs = CSK_Overs_Per_Bowler[1] + "." + CSK_DeliveriesUpTo6_Per_Bowler[1];
+            string CSK_player_3_total_Overs = CSK_Overs_Per_Bowler[2] + "." + CSK_DeliveriesUpTo6_Per_Bowler[2];
+            string CSK_player_4_total_Overs = CSK_Overs_Per_Bowler[3] + "." + CSK_DeliveriesUpTo6_Per_Bowler[3];
+            string CSK_player_5_total_Overs = CSK_Overs_Per_Bowler[4] + "." + CSK_DeliveriesUpTo6_Per_Bowler[4];
+
+            CSK_player_1_overs.GetComponent<Text>().text = CSK_player_1_total_Overs;
+            CSK_player_2_overs.GetComponent<Text>().text = CSK_player_2_total_Overs;
+            CSK_player_3_overs.GetComponent<Text>().text = CSK_player_3_total_Overs;
+            CSK_player_4_overs.GetComponent<Text>().text = CSK_player_4_total_Overs;
+            CSK_player_5_overs.GetComponent<Text>().text = CSK_player_5_total_Overs;
+
+            CSK_player_1_runs.GetComponent<Text>().text = CSK_Runs_Per_Bowler[0].ToString();
+            CSK_player_2_runs.GetComponent<Text>().text = CSK_Runs_Per_Bowler[1].ToString();
+            CSK_player_3_runs.GetComponent<Text>().text = CSK_Runs_Per_Bowler[2].ToString();
+            CSK_player_4_runs.GetComponent<Text>().text = CSK_Runs_Per_Bowler[3].ToString();
+            CSK_player_5_runs.GetComponent<Text>().text = CSK_Runs_Per_Bowler[4].ToString();
+
+            CSK_player_1_wickets.GetComponent<Text>().text = CSK_Wickets_Per_Bowler[0].ToString();
+            CSK_player_2_wickets.GetComponent<Text>().text = CSK_Wickets_Per_Bowler[1].ToString();
+            CSK_player_3_wickets.GetComponent<Text>().text = CSK_Wickets_Per_Bowler[2].ToString();
+            CSK_player_4_wickets.GetComponent<Text>().text = CSK_Wickets_Per_Bowler[3].ToString();
+            CSK_player_5_wickets.GetComponent<Text>().text = CSK_Wickets_Per_Bowler[4].ToString();
+        }
+    }
+}
